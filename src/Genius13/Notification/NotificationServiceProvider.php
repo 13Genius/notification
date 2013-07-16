@@ -19,8 +19,6 @@ class NotificationServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->package('genius13/notification');
-		
-		//include __DIR__.'/../../routes.php';
 	}
 
 	/**
@@ -30,9 +28,9 @@ class NotificationServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this -> app['notification'] = $this -> app -> share(function($app)
+		$this -> app -> bind('notification', function($app)
 		{
-			return new Notification;
+			return new Notification($app);
 		});
 		
 		$this -> app -> booting(function() {
