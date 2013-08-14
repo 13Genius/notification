@@ -14,7 +14,7 @@
     },
     "autoload": {
         "classmap": [
-            "src/migrations"
+            
         ],
         "psr-0": {
             "Genius13\\Notification": "src/"
