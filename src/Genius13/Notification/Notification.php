@@ -120,10 +120,11 @@ class Notification {
 			$owner_ids = array(0);
 		}
 		
-		$result = 1;
+		$result = 0;
 		
 		foreach ($owner_ids as $owner_id) {
-			$result = $result && $this -> redis-> del($this -> prefix . ':' . $owner_id);
+			$deletion = $this -> redis-> del($this -> prefix . ':' . $owner_id);
+			$result = $result || $deletion;
 		}
 		
 		return $result;
