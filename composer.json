@@ -1,11 +1,14 @@
 {
     "name": "genius13/notification",
     "description": "Manage app notifications.",
-    "keywords": ["laravel"],
+    "keywords": ["laravel","notification","alert"],
+    "homepage": "https://github.com/13Genius/notification",
     "authors": [
         {
             "name": "Marcos Sanz Latorre",
-            "email": "marcos.sanz@13genius.com"
+            "email": "marcos.sanz@13genius.com",
+            "homepage": "http://www.13genius.com",
+            "role": "Developer"
         }
     ],
     "require": {
