@@ -44,6 +44,7 @@ class Notification {
 	 * @param owner_id Owner user from the notification
 	 * @param message Message of the notification
 	 * @param event Event type of the action 
+	 * @param prefix Prefix of list of notifications
 	 * @return void
 	 */
 	public function create($message, $owner_id = 0, $event = 'general', $prefix = null)
@@ -76,6 +77,7 @@ class Notification {
 	 * Count new notifications
 	 *
 	 * @param owner_ids Owner user from the notification
+	 * @param prefix Prefix of list of notifications
 	 * @return integer
 	 */
 	public function counterNew(Array $owner_ids = array(), $prefix = null)
@@ -88,6 +90,7 @@ class Notification {
 	 *
 	 * @param list List of queue
 	 * @param owner_ids Owner user from the notification
+	 * @param prefix Prefix of list of notifications
 	 * @return integer
 	 */
 	private function counter(Array $owner_ids = array(), $list = null, $prefix = null)
@@ -119,6 +122,7 @@ class Notification {
 	 * Create a new notification
 	 *
 	 * @param owner_ids Owner user from the notification
+	 * @param prefix Prefix of list of notifications
 	 * @return void
 	 */
 	public function clear(Array $owner_ids = array(), $prefix = null)
@@ -146,9 +150,12 @@ class Notification {
 	 * Get notifications
 	 *
 	 * @param owner_ids Owner user from the notification
+	 * @param limit Number of results
+	 * @param prefix Prefix of list of notifications
+	 * @param block Get list without marking as read
 	 * @return void
 	 */
-	public function getByOwner(Array $owner_ids = array(), $limit = -1, $prefix = null)
+	public function getByOwner(Array $owner_ids = array(), $limit = -1, $prefix = null, $block = false)
 	{
 		if (empty($owner_ids)) {
 			$owner_ids = array(0);
@@ -173,15 +180,17 @@ class Notification {
 					array_push($result, $data);
 					
 					if (!$data->seen) {
-						$data_aux = json_encode(array(
-							'owner_id' => $data->owner_id,
-							'event' => $data->event, 
-							'value' => $data->value,
-							'time' => $data->time,
-							'seen' => 1,
-						));
-						$this -> redis-> zrem($prefix . ':' . $owner_id, $value);
-						$this -> redis-> zadd($prefix . ':' . $owner_id, $data->time, $data_aux);
+						if(!$block) {
+							$data_aux = json_encode(array(
+								'owner_id' => $data->owner_id,
+								'event' => $data->event, 
+								'value' => $data->value,
+								'time' => $data->time,
+								'seen' => 1,
+							));
+							$this -> redis-> zrem($prefix . ':' . $owner_id, $value);
+							$this -> redis-> zadd($prefix . ':' . $owner_id, $data->time, $data_aux);	
+						}
 					}
 					
 				}	
@@ -194,7 +203,4 @@ class Notification {
 		return $result;
 		
 	}
-	
-	
-
 }
